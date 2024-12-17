@@ -1,2 +1,2 @@
-# smarthome_app
+Smarthome
 Smarthome application created in Python with Django.
