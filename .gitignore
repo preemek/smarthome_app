@@ -1,0 +1,74 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.pylint.d
+*.log
+*.pot
+*.mo
+*.compiled
+*.sqlite3
+*.pyc_cache
+
+# Environment variables
+.env
+.env.*
+
+# Virtual environment
+venv/
+env/
+.venv/
+.env.bak/
+
+# Django specific
+db.sqlite3
+db.sqlite3-journal
+*.pot
+/static/
+media/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*~
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+*.session
+
+# Logs and other files
+*.log
+*.bak
+*.orig
+*.rej
+*.swo
+*.swn
+*.tmp
+*.lock
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# Coverage reports
+.coverage
+.tox
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
