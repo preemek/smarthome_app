@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from SmartHomeApp.views import shApp
+from django.conf.urls.static import static
+from django.conf import settings
 
 import SmartHomeApp
 
@@ -26,4 +28,4 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view()),
     path('', shApp, name='smart_home'),
     path('shApp/', include('SmartHomeApp.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
