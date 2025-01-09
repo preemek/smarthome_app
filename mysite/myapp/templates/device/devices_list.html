@@ -10,17 +10,16 @@
     <table>
         <thead>
             <tr>
+                <a href="{% url 'devices_list' %}" class="btn btn-primary">Add new device</a>
                 <th>Name</th>
-                <th>Topic</th>
-                <th>Type</th>
+                <th>Functions</th>
             </tr>
         </thead>
         <tbody>
             {% for device in devices %}
             <tr>
                 <td>{{ device.name }}</td>
-                <td>{{ device.topic }}</td>
-                <td>{{ device.type }}</td>
+                <td>{{ device.functions }}</td>
             </tr>
             {% endfor %}
         </tbody>

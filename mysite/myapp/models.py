@@ -4,8 +4,7 @@ from django.db import models
 
 class Device(models.Model):
     name = models.CharField(max_length=100)
-    topic = models.CharField(max_length=200)
-    type = models.CharField(max_length=50, choices=[('light', 'Light'), ('sensor', 'Sensor'), ('device', 'Device')])
+    funcions = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} ({self.topic})"
+        return f"{self.name} ({self.funcions})"
