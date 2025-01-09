@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SmartHomeApp</title>
+</head>
+<body>
+{% if devices|length > 0 %}
+    <h3> SmartHomeApp, Hello {{ user.username }} you have {{ devices|length }} devices.</h3>
+    <p>Your list of devices:</p>
+    {% for device in devices %}
+        <p>{{ device.name }}: {{ device.status }} | {{ device.power_in_watts }} | {{ device.owner }} | {{ device.description }}</p>
+    {% endfor %}
+{% else %}
+    <h3>SmartHomeApp, Hello {{ user.username }} you have no devices to manage.</h3>
+    <p>Please add first device</p>
+{% endif %}
+</body>
+</html>
