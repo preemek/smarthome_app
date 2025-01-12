@@ -7,6 +7,10 @@
 </head>
 <body>
 <h3>Wital w SmartHomeApp</h3>
-<p>Zaloguj się</p>
+{% if user.is_authenticated %}
+<p>tu będą linki</p>
+{% else %}
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
 </body>
 </html>

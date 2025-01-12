@@ -10,6 +10,7 @@
     {% csrf_token %}
     <button type="submit">Logout</button>
 </form>
+<hr>
 {% if devices|length > 0 %}
     <h3> SmartHomeApp, Hello {{ user.username }} you have {{ devices|length }} 
         {% if devices|length == 1 %}
