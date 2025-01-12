@@ -6,10 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %} 
-        {{ form }}
-        <button type="submit">Save</button>
+    <h3>Are you sure you want to delete the device: {{ device.name }}?</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Delete device</button>
     </form>
     <a href="{% url 'devices' %}">Back to list of devices</a>
 </body>

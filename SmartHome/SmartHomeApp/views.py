@@ -35,6 +35,15 @@ def shApp_edit_device(request, pk):
     else:
         return render(request, 'shApp_device_form.html', {'form': form})
 
+def shApp_delete_device(request, pk):
+    device = get_object_or_404(Device, pk=pk)
+
+    if request.method == 'POST':
+        device.delete()
+        return redirect('devices')
+    else:
+        return render(request, 'shApp_confirm_delete_device_form.html', {'device': device})
+
 
 
 
