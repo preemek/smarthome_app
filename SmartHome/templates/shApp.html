@@ -4,7 +4,7 @@
 {% block body %} 
     <div class="p-3 mb-2 bg-dark-subtle text-dark-emphasis">
         <div class="container text-center" style="height: 5rem; padding: 20px;">
-            <h3> <i class="fa-solid fa-house-signal"></i> Witaj w SmartHomeApp</h3>
+            <h3> <i class="fa-solid fa-house-signal"></i> Witaj w SmartHome App</h3>
         </div>
     </div>
     <div style="height: 5rem"></div>
@@ -43,14 +43,32 @@
             </div>
         </div>
     </div>
-    
+   {% else %}
+    <div class="container text-center">
+        <div class="row">
+            <div class="col">
+ 
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Sign in to SmartHome App</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="p-3 mb-2 bg-dark-subtle text-dark-emphasis" style = "position: fixed;
     left: 0; bottom: 0; width: 100%;">
         <div class="text-end" style="height: 20px">
-            <p> <i class="fa-solid fa-house-signal"></i> SmartHomeApp Copyright © 2025 Andrzej Wawryk</p>
+            <p> <i class="fa-solid fa-house-signal"></i> SmartHome App Copyright © 2025 Andrzej Wawryk</p>
         </div>
-    </div>    
-    {% else %}
-    <a href="{% url 'login' %}">Login</a>
-    {% endif %}
+    </div>      
 {% endblock %}
