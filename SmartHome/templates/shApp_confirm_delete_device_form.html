@@ -1,16 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'shApp_base_template.html' %}
+
+{% block title %} SHA Delete confirmation {% endblock %}
+{% block body %} 
     <h3>Are you sure you want to delete the device: {{ device.name }}?</h3>
     <form method="POST">
         {% csrf_token %}
         <button type="submit">Delete device</button>
     </form>
     <a href="{% url 'devices' %}">Back to list of devices</a>
-</body>
-</html>
+{% endblock %}

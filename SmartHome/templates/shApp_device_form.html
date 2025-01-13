@@ -1,16 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'shApp_base_template.html' %}
+{% load bootstrap %}
+{% block title %} SHA Device form {% endblock %}
+{% block body %} 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %} 
-        {{ form }}
+        {{ form|bootstrap }}
         <button type="submit">Save</button>
     </form>
     <a href="{% url 'devices' %}">Back to list of devices</a>
-</body>
-</html>
+{% endblock %}

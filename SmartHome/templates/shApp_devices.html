@@ -1,11 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SmartHomeApp</title>
-</head>
-<body>
+{% extends 'shApp_base_template.html' %}
+
+{% block title %} SHA List of devices {% endblock %}
+{% block body %} 
 <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
     <button type="submit">Logout</button>
@@ -30,5 +26,4 @@
     <h3>SmartHomeApp, Hello {{ user.username }} you have no devices to manage.</h3>
     <a href="{% url 'new_device' %}">Add new device</a>
 {% endif %}
-</body>
-</html>
+{% endblock %}

@@ -1,15 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'shApp_base_template.html' %}
+{% load bootstrap %}
+{% block title %} SHA Login {% endblock %}
+{% block body %} 
 <form method = "post">
    {% csrf_token %} 
-    {{ form }}
-    <button type="submit">Login</button>
+    {{ form|bootstrap }}
+    <button type="submit">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
 </form>
-</body>
-</html>
+{% endblock %}

@@ -1,16 +1,56 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SmartHomeApp</title>
-</head>
-<body>
-<h3>Wital w SmartHomeApp</h3>
-{% if user.is_authenticated %}
-<p>tu będą linki</p>
-{% else %}
-<a href="{% url 'login' %}">Login</a>
-{% endif %}
-</body>
-</html>
+{% extends 'shApp_base_template.html' %}
+
+{% block title %}Smart Home App {% endblock %}
+{% block body %} 
+    <div class="p-3 mb-2 bg-dark-subtle text-dark-emphasis">
+        <div class="container text-center" style="height: 5rem; padding: 20px;">
+            <h3> <i class="fa-solid fa-house-signal"></i> Witaj w SmartHomeApp</h3>
+        </div>
+    </div>
+    <div style="height: 5rem"></div>
+    {% if user.is_authenticated %}
+    <div class="container text-center">
+        <div class="row">
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="p-3 mb-2 bg-dark-subtle text-dark-emphasis" style = "position: fixed;
+    left: 0; bottom: 0; width: 100%;">
+        <div class="text-end" style="height: 20px">
+            <p> <i class="fa-solid fa-house-signal"></i> SmartHomeApp Copyright © 2025 Andrzej Wawryk</p>
+        </div>
+    </div>    
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+{% endblock %}
