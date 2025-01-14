@@ -1,7 +1,21 @@
 {% extends 'shApp_base_template.html' %}
 
 {% block title %} SHA Delete confirmation {% endblock %}
-{% block body %} 
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="navbar-brand" href="{% url 'smart_home' %}"><i class="fa-solid fa-house-signal"></i> Smart Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="navbar-brand" href="{% url 'smart_home' %}"><i class="fa-solid fa-house-signal"></i> Smart Home</a>
+        </li>  
+      </ul>
+    </div>
+  </div>
+</nav>   
     <h3>Are you sure you want to delete the device: {{ device.name }}?</h3>
     <form method="POST">
         {% csrf_token %}

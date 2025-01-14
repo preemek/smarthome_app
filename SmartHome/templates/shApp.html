@@ -1,74 +1,39 @@
 {% extends 'shApp_base_template.html' %}
-
+{% load bootstrap %}
 {% block title %}Smart Home App {% endblock %}
 {% block body %} 
-    <div class="p-3 mb-2 bg-dark-subtle text-dark-emphasis">
-        <div class="container text-center" style="height: 5rem; padding: 20px;">
-            <h3> <i class="fa-solid fa-house-signal"></i> Witaj w SmartHome App</h3>
-        </div>
-    </div>
-    <div style="height: 5rem"></div>
-    {% if user.is_authenticated %}
+<div style="height: 5rem"></div>
     <div class="container text-center">
         <div class="row">
             <div class="col">
-                <div class="card" style="width: 18rem;">
+                <div class="card" style="width: 20rem; height: 15rem">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary" style="pointer-events: none;">Go somewhere</a>
+                        <h5 class="card-title"><i class="fa-regular fa-lightbulb"></i>&nbsp;&nbsp;Device control</h5>
+                        <p class="card-text">On the Device Control page you will find a list of all devices connected to the system.<br></p>
+                        
+                        <a href="{% url 'devices' %}" class="btn btn-primary">Device control <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card" style="width: 18rem;">
+                <div class="card" style="width: 20rem; height: 15rem">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="card-title"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Charts and statistics</h5>
+                        <p class="card-text">On the Statistics and Charts Page you can analyze data in real time.<br><br></p>
+                        <a href="#" class="btn btn-primary">Charts and statistics <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card" style="width: 18rem;">
+                <div class="card" style="width: 20rem; height: 15rem">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="card-title"><i class="fa-solid fa-table-list"></i>&nbsp;&nbsp;Recent events</h5>
+                        <p class="card-text">On the System Logs page you will find a complete history of events.<br><br></p>
+                        <a href="#" class="btn btn-primary">Recent events <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-   {% else %}
-    <div class="container text-center">
-        <div class="row">
-            <div class="col">
- 
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Sign in to SmartHome App</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    <div class="p-3 mb-2 bg-dark-subtle text-dark-emphasis" style = "position: fixed;
-    left: 0; bottom: 0; width: 100%;">
-        <div class="text-end" style="height: 20px">
-            <p> <i class="fa-solid fa-house-signal"></i> SmartHome App Copyright © 2025 Andrzej Wawryk</p>
-        </div>
-    </div>      
+     
 {% endblock %}

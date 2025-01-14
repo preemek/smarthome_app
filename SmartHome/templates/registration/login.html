@@ -2,9 +2,35 @@
 {% load bootstrap %}
 {% block title %} SHA Login {% endblock %}
 {% block body %} 
-<form method = "post">
-   {% csrf_token %} 
-    {{ form|bootstrap }}
-    <button type="submit">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
-</form>
+    <div style="height: 5rem"></div>
+     <div class="container text-center">
+        <div class="row">
+            <div class="col">
+ 
+            </div>
+            <div class="col">
+                <div class="card" style="width: 26rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Log in to SmartHome App</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <div class="mb-3 row">
+                            <form method = "post">
+                               {% csrf_token %} 
+                                {{ form|bootstrap }}
+                                <div style="padding: 1rem"><button class="btn btn-primary" type="submit">Log in <i class="fa-solid fa-arrow-right-to-bracket"></i></button></div>
+                            </form>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+
+            </div>
+        </div>
+    </div>   
+    
+    
+    
+
 {% endblock %}
