@@ -13,7 +13,7 @@
       </ul>
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <h4>List of devices</h4>
+          <h4><i class="fa-regular fa-rectangle-list"></i> List of devices</h4>
         </li>
       </ul>  
       {% if user.is_authenticated %}
@@ -40,6 +40,29 @@
     </h6>
     <div data-bs-spy="scroll" data-bs-smooth-scroll="true" class="scrollspy-example bg-body-tertiary p-3 rounded-2" tabindex="0">
         <div class="container text-center">
+            <div class="row align-items-start">
+                <div class="col" style="text-align: left">
+                    <p>Device name</p>
+                </div>
+                <div class="col" style="text-align: center">
+                    <p>On / Off</p>
+                </div>
+                <div class="col" style="text-align: left">
+                    <p>Device power in watts</p>                    
+                </div>
+                <div class="col"  style="text-align: left">
+                    <p>Device description</p>
+                </div>
+                <div class="col">
+                    <p>Edit</p>
+                </div>
+                <div class="col">
+                    <p>Delete</p>
+                </div>
+                <div class="col">
+                    <p>New</p>
+                </div>
+            </div>
             {% for device in devices %}
             <div class="row align-items-start">
                 <div class="col" style="text-align: left">
@@ -47,9 +70,9 @@
                 </div>
                 <div class="col" style="text-align: center">
                     {% if device.status == 0 %}
-                        <i class="fa-solid fa-power-off" style="color:black"></i>
+                        <button type="submit" style="border: none; background-color: #f8f9fa"><i class="fa-solid fa-power-off" style="color:black"></i></button>
                     {% else %}
-                        <i class="fa-solid fa-power-off" style="color:green"></i>
+                        <button type="submit" style="border: none; background-color: #f8f9fa"><i class="fa-solid fa-power-off" style="color:green"></i></button>
                     {% endif %}
                 </div>
                 <div class="col" style="text-align: left">
