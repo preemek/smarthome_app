@@ -12,14 +12,14 @@
       </ul>
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          {% if isNew %}  
+          {% if IsNew %}  
             <h4><i class="fa-solid fa-square-plus"></i> Add new device</h4>
           {% else %}
             <h4><i class="fa-solid fa-pen-to-square"></i> Edit device</h4>  
           {% endif %}  
         </li>
       </ul>  
-            {% if user.is_authenticated %}
+      {% if user.is_authenticated %}
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <form method="post" action="{% url 'logout' %}" > 
@@ -32,10 +32,17 @@
     </div>
   </div>
 </nav>
+<br>
+<div class="card mx-auto" style="width: 35rem;">
+  <div class="card-body">
+    <h5 class="card-title">Device form</h5>
+    <p class="card-text">Please provide device specifications</p>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %} 
         {{ form|bootstrap }}
-        <button type="submit">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    <a href="{% url 'devices' %}">Back to list of devices</a>
-{% endblock %}
+  </div>
+</div>    
+    
+ {% endblock %}
