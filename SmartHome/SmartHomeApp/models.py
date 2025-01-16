@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import DO_NOTHING
+
 
 # Create your models here.
 class DeviceManager(models.Manager):
@@ -21,3 +23,13 @@ class Device(models.Model):
 
     def __str__(self):
         return self.name
+
+class LogRow(models.Model):
+    on_timestamp = models.DateTimeField(auto_now_add=True)
+    device = models.ForeignKey(Device, on_delete=models.DO_NOTHING)
+    owner = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    power_in_watts = models.IntegerField(null=False, blank=False)
+    off_timestamp = models.DateTimeField(auto_now_add=False)
+    time_in_seconds = models.IntegerField(null=False, blank=False)
+
+

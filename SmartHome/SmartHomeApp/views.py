@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from SmartHomeApp.models import Device
+from SmartHomeApp.models import Device, LogRow
 from SmartHomeApp.forms import DeviceForm
 from django.contrib.auth.decorators import login_required
 
@@ -49,6 +49,10 @@ def shApp_edit_OnOff(request, pk):
     else:
         device.status = 0
     device.save()
+
+    if device.status == 1:
+        pass
+
     return redirect('devices')
 
 @login_required(login_url='login')
