@@ -14,7 +14,8 @@ class Device(models.Model):
     status = models.PositiveSmallIntegerField(null=False, blank=False, default=0, choices=STATUS_CHOICES)
     power_in_watts = models.PositiveSmallIntegerField(null=False, blank=False, default=0)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.TextField(null=True, blank=True, default='no description')
+    description = models.CharField(max_length=300, null=True, blank=True, default='no description')
+
 
     objects = DeviceManager()
 
