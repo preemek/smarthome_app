@@ -69,11 +69,14 @@
                     {{ device.name }}
                 </div>
                 <div class="col" style="text-align: center">
+                <form method="post" action="{% url 'device_OnOff' device.id %}" > 
+                    {% csrf_token %}
                     {% if device.status == 0 %}
                         <button type="submit" style="border: none; background-color: #f8f9fa"><i class="fa-solid fa-power-off" style="color:black"></i></button>
                     {% else %}
                         <button type="submit" style="border: none; background-color: #f8f9fa"><i class="fa-solid fa-power-off" style="color:green"></i></button>
                     {% endif %}
+                </form>
                 </div>
                 <div class="col" style="text-align: left">
                     {{ device.power_in_watts }}

@@ -24,7 +24,7 @@ def shApp_new_device(request):
         device.save()
         return redirect('devices')
     else:
-        return render(request, 'shApp_device_form.html', {'form': form})
+        return render(request, 'shApp_device_form.html', {'form': form, 'IsNew': True})
 
 @login_required(login_url='login')
 def shApp_edit_device(request, pk):
@@ -37,7 +37,19 @@ def shApp_edit_device(request, pk):
         device.save()
         return redirect('devices')
     else:
-        return render(request, 'shApp_device_form.html', {'form': form})
+        return render(request, 'shApp_device_form.html', {'form': form, 'IsNew': False})
+
+@login_required(login_url='login')
+def shApp_edit_OnOff(request, pk):
+    device = get_object_or_404(Device, pk=pk)
+
+    device.owner = request.user
+    if device.status == 0:
+        device.status = 1
+    else:
+        device.status = 0
+    device.save()
+    return redirect('devices')
 
 @login_required(login_url='login')
 def shApp_delete_device(request, pk):
