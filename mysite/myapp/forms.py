@@ -7,5 +7,5 @@ class DeviceForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'name':forms.TextInput(attrs = {'placeholder':"Input device's name"}),
-            'functions':forms.Textarea(attrs= {'rows':5, 'cols':40})       
+            'function':forms.TextInput(attrs = {'placeholder':"Input device's function"}),      
                    }

@@ -11,7 +11,14 @@
         <h1>Add device</h1>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Name</label>
+                <input type="text" name="name" id="id_name" class="form-control" placeholder="Input device's name">
+            </div>
+            <div class="mb-3">
+                <label for="id_function" class="form-label">Functions</label>
+                <input type="text" name="function" id="id_function" class="form-control" placeholder="Input device's function">
+            </div>
             <button type="submit" class="btn btn-primary">Add</button>
         </form>
         <hr>

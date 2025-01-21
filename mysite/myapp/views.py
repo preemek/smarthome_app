@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 def devices_list(request):
     devices = Device.objects.all()
-    return render(request, 'device/devices_list.html', {'devices': devices})
+    return render(request, 'myapp/devices_list.html', {'devices_list': devices})
 
 def home(request):
     return render(request, 'home.html')

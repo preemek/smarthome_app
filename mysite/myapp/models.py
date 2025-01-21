@@ -7,4 +7,4 @@ class Device(models.Model):
     funcions = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} ({self.funcions})"
+        return f"{self.name} {self.funcions}"

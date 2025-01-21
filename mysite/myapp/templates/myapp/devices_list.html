@@ -3,43 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devices</title>
-
+    <title>Devices List</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 </head>
 <body>
-    <h1>Devices</h1>
+    <h1>Devices List</h1>
     <table>
         <thead>
             <tr>
-
                 <a href="{% url 'add_device' %}" class="btn btn-primary">Add new device</a>
                 <th>Name</th>
                 <th>Functions</th>
-                <th>Actions</th>
-
-                <a href="{% url 'devices_list' %}" class="btn btn-primary">Add new device</a>
-                <th>Name</th>
-                <th>Functions</th>
-
             </tr>
         </thead>
         <tbody>
-            {% for device in devices %}
-            <tr>
-                <td>{{ device.name }}</td>
-                <td>{{ device.functions }}</td>
-
+            {% for device_list in devices_list %}
+            <tr data-id="{{ device_list.id }}">
+                <td>{{ Device.name }} </td>
+                <td>{{ Device.functions }}</td>
                 <td>
-                    <button class="delete-btn" data-id="{{ device.id }}">Delete</button>
+                    <button class="delete-btn" data-id="{{ device_list.id }}">Delete</button>
                 </td>
-
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 
     <script>
         function getCookie(name) {
@@ -59,31 +47,25 @@
         const csrftoken = getCookie('csrftoken');
 
         $(document).on('click', '.delete-btn', function () {
-            const deviceId = $(this).data('id');
-            const row = $(this).closest('tr');
+            const deviceListId = $(this).data('id');
 
             if (confirm('Are you sure you want to delete this device?')) {
                 $.ajax({
-                    url: `/delete_device_ajax/${deviceId}/`,
+                    url: `/delete_device_ajax/${deviceListId}/`,
                     type: 'POST',
                     headers: { 'X-CSRFToken': csrftoken },
                     success: function (response) {
                         if (response.success) {
-                            row.remove();
                             alert('Device successfully deleted!');
-                        } else {
-                            alert('Error deleting device!');
-                        }
+                            location.reload(); // Перезагрузка страницы
+                        } 
                     },
                     error: function () {
-                        alert('Failed to delete the device!');
+                        alert('Failed to communicate with the server.');
                     }
                 });
             }
         });
     </script>
-</body>
-</html>
-
 </body>
 </html>
