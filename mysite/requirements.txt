@@ -1,0 +1,16 @@
+appdirs==1.4.4
+asgiref==3.8.1
+Django==5.1.4
+jedi==0.19.1
+Jinja2==3.1.4
+MarkupSafe==3.0.2
+paho-mqtt==2.1.0
+parso==0.8.4
+prompt_toolkit==3.0.47
+psycopg2==2.9.10
+psycopg2-binary==2.9.10
+ptpython==3.0.29
+Pygments==2.18.0
+sqlparse==0.5.3
+tzdata==2024.2
+wcwidth==0.2.13
