@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Device
 from .forms import DeviceForm
+from django.http import JsonResponse
+
 # Create your views here.
 
 def devices_list(request):
@@ -18,4 +21,16 @@ def add_device(request):
             return redirect('devices_list')
     else:
         form = DeviceForm()
+
     return render(request, 'add_device.html', {'form': form})
+
+def delete_device(request, pk):
+    if request.method == 'POST':
+        device = get_object_or_404(Device, pk=pk)
+        device.delete()
+        return JsonResponse({'succes': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status = 400)
+
+
+ 
+

@@ -4,15 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devices</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 </head>
 <body>
     <h1>Devices</h1>
     <table>
         <thead>
             <tr>
+
+                <a href="{% url 'add_device' %}" class="btn btn-primary">Add new device</a>
+                <th>Name</th>
+                <th>Functions</th>
+                <th>Actions</th>
+
                 <a href="{% url 'devices_list' %}" class="btn btn-primary">Add new device</a>
                 <th>Name</th>
                 <th>Functions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -20,9 +30,60 @@
             <tr>
                 <td>{{ device.name }}</td>
                 <td>{{ device.functions }}</td>
+
+                <td>
+                    <button class="delete-btn" data-id="{{ device.id }}">Delete</button>
+                </td>
+
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        $(document).on('click', '.delete-btn', function () {
+            const deviceId = $(this).data('id');
+            const row = $(this).closest('tr');
+
+            if (confirm('Are you sure you want to delete this device?')) {
+                $.ajax({
+                    url: `/delete_device_ajax/${deviceId}/`,
+                    type: 'POST',
+                    headers: { 'X-CSRFToken': csrftoken },
+                    success: function (response) {
+                        if (response.success) {
+                            row.remove();
+                            alert('Device successfully deleted!');
+                        } else {
+                            alert('Error deleting device!');
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to delete the device!');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
 </body>
 </html>
