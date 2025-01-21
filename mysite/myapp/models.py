@@ -4,7 +4,7 @@ from django.db import models
 
 class Device(models.Model):
     name = models.CharField(max_length=100)
-    funcions = models.TextField(blank=True, null=True)
+    functions = models.TextField(blank=True, null=True)  
 
     def __str__(self):
-        return f"{self.name} {self.funcions}"
+        return f"{self.name} {self.functions}"

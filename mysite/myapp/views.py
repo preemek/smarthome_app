@@ -15,14 +15,12 @@ def home(request):
 
 def add_device(request):
     if request.method == 'POST':
-        form = DeviceForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('devices_list')
-    else:
-        form = DeviceForm()
-
-    return render(request, 'add_device.html', {'form': form})
+        name = request.POST.get('name')
+        functions = request.POST.get('functions')
+        device = Device(name=name, functions=functions)
+        device.save()
+        return redirect('devices_list')  
+    return render(request, 'add_device.html')
 
 def delete_device(request, pk):
     if request.method == 'POST':

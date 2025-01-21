@@ -19,8 +19,8 @@
         <tbody>
             {% for device_list in devices_list %}
             <tr data-id="{{ device_list.id }}">
-                <td>{{ Device.name }} </td>
-                <td>{{ Device.functions }}</td>
+                <td>{{ device_list.name }} </td>
+                <td>{{ device_list.functions }}</td>
                 <td>
                     <button class="delete-btn" data-id="{{ device_list.id }}">Delete</button>
                 </td>
