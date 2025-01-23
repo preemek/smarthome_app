@@ -23,6 +23,6 @@ urlpatterns = [
     path('devices/', views.devices_list, name='devices_list'),
     path('', views.home, name='home'),
     path('add_device/', views.add_device, name= 'add_device'),
-    path('delete_device_ajax/<int:pk>/', views.delete_device, name= 'delete_device_ajax')
-
+    path('delete_device_ajax/<int:pk>/', views.delete_device, name= 'delete_device_ajax'),
+    path('toggle_device_status/<int:device_id>/', views.toggle_device_status, name='toggle_device_status'),
 ]
