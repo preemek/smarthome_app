@@ -1,0 +1,36 @@
+{% extends 'shApp_base_template.html' %}
+
+{% block title %} Stats {% endblock %}
+
+{% block body %} 
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="navbar-brand" href="{% url 'smart_home' %}"><i class="fa-solid fa-house-signal"></i> Smart Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="navbar-brand" href="{% url 'devices' %}"><i class="fa-regular fa-rectangle-list"></i> List of devices</a>
+        </li>   
+      </ul>
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <h4><i class="fa-regular fa-rectangle-list"></i> Stats</h4>
+        </li>
+      </ul>  
+      {% if user.is_authenticated %}
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <form method="post" action="{% url 'logout' %}" > 
+              {% csrf_token %} 
+              <button class="btn btn-secondary" type="submit">Log&nbsp;out&nbsp;<i class="fa-solid fa-arrow-right-to-bracket"></i></button> 
+          </form>
+        </li>  
+      </ul>
+      {% endif %} 
+    </div>
+  </div>
+</nav>
+{{ chart|safe }}
+{% endblock %}

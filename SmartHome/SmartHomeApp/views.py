@@ -1,9 +1,16 @@
+from dataclasses import field
 from datetime import datetime, timezone
+from lib2to3.fixes.fix_input import context
 
+from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.defaultfilters import title
+
 from SmartHomeApp.models import Device, LogRow
 from SmartHomeApp.forms import DeviceForm
 from django.contrib.auth.decorators import login_required
+
+import plotly.express as px
 
 # Create your views here.
 
@@ -77,6 +84,24 @@ def shApp_logs(request):
 
     return render(request, 'shApp_logs.html', {"logs": logs})
 
+
+@login_required(login_url='login')
+def shApp_stats(request):
+    logs = LogRow.objects.filter(owner=request.user)
+    print(logs)
+    fig = px.bar(
+        logs,
+        x = [c.device.name for c in logs],
+        y = [c.power_in_watts * c.time_in_seconds / 3600 for c in logs],
+        title = 'Power utilisation by device',
+        labels = {'x':'device', 'y':'Wh'},
+        color=[c.device.name for c in logs],
+    )
+
+    fig.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+
+    chart = fig.to_html()
+    return render(request, 'shApp_stats.html', {'chart': chart})
 
 
 

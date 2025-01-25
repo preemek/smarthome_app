@@ -88,8 +88,5 @@
         </div>
     </div>
 
-{% else %}
-    <h6>{{ user.username }} you have no devices to manage.</h6>
-    <a href="{% url 'new_device' %}">Add new device</a>
 {% endif %}
 {% endblock %}
