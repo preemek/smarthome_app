@@ -71,6 +71,13 @@ def shApp_delete_device(request, pk):
     else:
         return render(request, 'shApp_confirm_delete_device_form.html', {'device': device})
 
+@login_required(login_url='login')
+def shApp_logs(request):
+    logs = LogRow.objects.filter(owner=request.user).order_by('on_timestamp').reverse()
+
+    return render(request, 'shApp_logs.html', {"logs": logs})
+
+
 
 
 
