@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django.shortcuts import render, redirect, get_object_or_404
 from SmartHomeApp.models import Device, LogRow
 from SmartHomeApp.forms import DeviceForm
@@ -46,12 +48,16 @@ def shApp_edit_OnOff(request, pk):
     device.owner = request.user
     if device.status == 0:
         device.status = 1
+        LogRow.objects.create(device=device, owner=request.user, power_in_watts=device.power_in_watts,
+                              time_in_seconds=0)
     else:
         device.status = 0
+        log_row = LogRow.objects.get(device=device, owner=request.user, time_in_seconds=0)
+        log_row.off_timestamp = datetime.now(timezone.utc)
+        log_row.time_in_seconds = (log_row.off_timestamp - log_row.on_timestamp).seconds
+        log_row.save()
     device.save()
 
-    if device.status == 1:
-        pass
 
     return redirect('devices')
 
