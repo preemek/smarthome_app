@@ -2,7 +2,7 @@ from dataclasses import field
 from datetime import datetime, timezone
 from lib2to3.fixes.fix_input import context
 
-from django.db.models import Sum, Subquery, F
+from django.db.models import Sum, Subquery, F, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import title
 
@@ -94,7 +94,11 @@ def shApp_stats(request):
              .order_by('device__name')
              .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
-    fig = px.bar(
+    logs_count_on_off = (logs.values('device__name')
+                         .order_by('device__name')
+                         .annotate(count_on_off=Count('device__name')))
+
+    fig_sum_total_power = px.bar(
         logs_sum_total_power,
         x = 'device__name',
         y = 'sum_power_utilisation',
@@ -103,10 +107,24 @@ def shApp_stats(request):
         color='device__name',
     )
 
-    fig.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+    fig_sum_total_power.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
 
-    chart_sum_total_power = fig.to_html()
-    return render(request, 'shApp_stats.html', {'chart_sum_total_power': chart_sum_total_power})
+    chart_sum_total_power = fig_sum_total_power.to_html()
+
+    fig_count_on_off = px.bar(
+        logs_count_on_off,
+        x = 'device__name',
+        y = 'count_on_off',
+        title = 'Number of times the device was switched on',
+        labels = {'device__name':'device', 'count_on_off':'number'},
+        color='device__name',
+    )
+
+    fig_count_on_off.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+
+    chart_count_on_off = fig_count_on_off.to_html()
+
+    return render(request, 'shApp_stats.html', {'chart_sum_total_power': chart_sum_total_power, 'chart_count_on_off': chart_count_on_off})
 
 
 

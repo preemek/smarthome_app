@@ -13,10 +13,13 @@
         <li class="nav-item">
           <a class="navbar-brand" href="{% url 'devices' %}"><i class="fa-regular fa-rectangle-list"></i> List of devices</a>
         </li>   
+        <li class="nav-item">
+          <a class="navbar-brand" href="{% url 'logs' %}"><i class="fa-solid fa-table-list"></i>&nbsp;&nbsp;Recent events</a>
+        </li>    
       </ul>
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <h4><i class="fa-regular fa-rectangle-list"></i> Stats</h4>
+          <h4><i class="fa-solid fa-chart-line"></i> Charts and statistics</h4>
         </li>
       </ul>  
       {% if user.is_authenticated %}
@@ -33,4 +36,5 @@
   </div>
 </nav>
 {{ chart_sum_total_power|safe }}
+{{ chart_count_on_off|safe }}    
 {% endblock %}
