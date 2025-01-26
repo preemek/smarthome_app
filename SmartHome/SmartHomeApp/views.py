@@ -2,7 +2,7 @@ from dataclasses import field
 from datetime import datetime, timezone
 from lib2to3.fixes.fix_input import context
 
-from django.db.models import Sum
+from django.db.models import Sum, Subquery, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import title
 
@@ -87,21 +87,26 @@ def shApp_logs(request):
 
 @login_required(login_url='login')
 def shApp_stats(request):
-    logs = LogRow.objects.filter(owner=request.user)
-    print(logs)
+    logs = LogRow.objects.filter(owner=request.user
+                                  ).annotate(total_power_utilisation
+                                                         = F('power_in_watts') * F('time_in_seconds') / 3600)
+    logs_sum_total_power = (logs.values('device__name')
+             .order_by('device__name')
+             .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
+
     fig = px.bar(
-        logs,
-        x = [c.device.name for c in logs],
-        y = [c.power_in_watts * c.time_in_seconds / 3600 for c in logs],
+        logs_sum_total_power,
+        x = 'device__name',
+        y = 'sum_power_utilisation',
         title = 'Power utilisation by device',
-        labels = {'x':'device', 'y':'Wh'},
-        color=[c.device.name for c in logs],
+        labels = {'device__name':'device', 'sum_power_utilisation':'Wh'},
+        color='device__name',
     )
 
     fig.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
 
-    chart = fig.to_html()
-    return render(request, 'shApp_stats.html', {'chart': chart})
+    chart_sum_total_power = fig.to_html()
+    return render(request, 'shApp_stats.html', {'chart_sum_total_power': chart_sum_total_power})
 
 
 
