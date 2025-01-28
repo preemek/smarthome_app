@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import title
 
 from SmartHomeApp.models import Device, LogRow
-from SmartHomeApp.forms import DeviceForm
+from SmartHomeApp.forms import DeviceForm, FilterForm
 from django.contrib.auth.decorators import login_required
 
 import plotly.express as px
@@ -87,9 +87,21 @@ def shApp_logs(request):
 
 @login_required(login_url='login')
 def shApp_stats(request):
+    start_date = request.POST.get('start_date')
+    end_date = request.POST.get('end_date')
+    filter_devices = request.POST.get('device')
     logs = LogRow.objects.filter(owner=request.user
                                   ).annotate(total_power_utilisation
                                                          = F('power_in_watts') * F('time_in_seconds') / 3600)
+    if start_date is not None:
+        logs = logs.filter(on_timestamp__gte=start_date)
+    if end_date is not None:
+        logs = logs.filter(on_timestamp__lte=end_date)
+    if filter_devices is not None:
+        logs = logs.filter(device=filter_devices)
+
+    print('filter_devices: ',filter_devices)
+
     logs_sum_total_power = (logs.values('device__name')
              .order_by('device__name')
              .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
@@ -124,7 +136,8 @@ def shApp_stats(request):
 
     chart_count_on_off = fig_count_on_off.to_html()
 
-    return render(request, 'shApp_stats.html', {'chart_sum_total_power': chart_sum_total_power, 'chart_count_on_off': chart_count_on_off})
+    return render(request, 'shApp_stats.html', {'chart_sum_total_power': chart_sum_total_power
+        , 'chart_count_on_off': chart_count_on_off,'form': FilterForm(current_user=request.user)})
 
 
 

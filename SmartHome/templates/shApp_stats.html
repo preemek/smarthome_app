@@ -1,5 +1,5 @@
 {% extends 'shApp_base_template.html' %}
-
+{% load bootstrap %}
 {% block title %} Stats {% endblock %}
 
 {% block body %} 
@@ -35,6 +35,12 @@
     </div>
   </div>
 </nav>
+    <form method="post" action="{% url 'stats' %}" > 
+        {% csrf_token %}
+        {{ form|bootstrap }}
+        <br>
+        <button type="submit" class="btn btn-primary">Filter</button>  
+    </form>
 {{ chart_sum_total_power|safe }}
 {{ chart_count_on_off|safe }}    
 <br>    
