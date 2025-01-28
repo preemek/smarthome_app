@@ -100,6 +100,7 @@ def shApp_stats(request):
     if filter_devices is not None:
         logs = logs.filter(device=filter_devices)
 
+
     print('filter_devices: ',filter_devices)
 
     logs_sum_total_power = (logs.values('device__name')

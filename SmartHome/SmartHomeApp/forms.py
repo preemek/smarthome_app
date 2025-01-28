@@ -16,5 +16,6 @@ class FilterForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['device'] = forms.ModelChoiceField(queryset=Device.objects.for_user(self.current_user))
 
+
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
