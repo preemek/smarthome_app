@@ -11,6 +11,6 @@ class DeviceAdmin(admin.ModelAdmin):
 
 @admin.register(LogRow)
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ["on_timestamp", "device", "owner", "power_in_watts", "off_timestamp", "time_in_seconds"]
+    list_display = ["on_timestamp", "device", "owner", "power_in_watts", "off_timestamp", "time_in_seconds","off_date"]
     list_filter = ["owner"]
     search_fields = ["device", "owner"]

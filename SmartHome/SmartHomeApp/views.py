@@ -103,8 +103,8 @@ def shApp_stats(request):
 
     print('filter_devices: ',filter_devices)
 
-    logs_sum_total_power_by_date = (logs.values('off_timestamp')
-                                      .order_by('off_timestamp')
+    logs_sum_total_power_by_date = (logs.values('off_timestamp__date')
+                                      .order_by('off_timestamp__date')
                                       .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
     print(logs_sum_total_power_by_date)
@@ -119,10 +119,11 @@ def shApp_stats(request):
 
     fig_sum_total_power_by_date = px.line(
         logs_sum_total_power_by_date,
-        x = 'off_timestamp',
+        x = 'off_timestamp__date',
         y = 'sum_power_utilisation',
+        markers = True,
         title = 'Total power utilisation',
-        labels = {'off_timestamp':'date', 'sum_power_utilisation':'Wh'},
+        labels = {'off_timestamp__date':'date', 'sum_power_utilisation':'Wh'},
     )
 
     fig_sum_total_power_by_date.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
@@ -130,10 +131,10 @@ def shApp_stats(request):
     chart_sum_total_power_by_date = fig_sum_total_power_by_date.to_html()
 
 
-    fig_sum_total_power_by_device = px.bar(
+    fig_sum_total_power_by_device = px.pie(
         logs_sum_total_power_by_device,
-        x = 'device__name',
-        y = 'sum_power_utilisation',
+        names = 'device__name',
+        values = 'sum_power_utilisation',
         title = 'Power utilisation by device',
         labels = {'device__name':'device', 'sum_power_utilisation':'Wh'},
         color='device__name',
