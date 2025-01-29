@@ -31,5 +31,6 @@ class LogRow(models.Model):
     power_in_watts = models.PositiveSmallIntegerField(null=False, blank=False)
     off_timestamp = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     time_in_seconds = models.IntegerField(null=False, blank=False)
+    off_date = models.DateField(null=True, blank=True)
 
 

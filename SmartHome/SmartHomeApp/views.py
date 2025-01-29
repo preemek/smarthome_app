@@ -103,7 +103,13 @@ def shApp_stats(request):
 
     print('filter_devices: ',filter_devices)
 
-    logs_sum_total_power = (logs.values('device__name')
+    logs_sum_total_power_by_date = (logs.values('off_timestamp')
+                                      .order_by('off_timestamp')
+                                      .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
+
+    print(logs_sum_total_power_by_date)
+
+    logs_sum_total_power_by_device = (logs.values('device__name')
              .order_by('device__name')
              .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
@@ -111,8 +117,21 @@ def shApp_stats(request):
                          .order_by('device__name')
                          .annotate(count_on_off=Count('device__name')))
 
-    fig_sum_total_power = px.bar(
-        logs_sum_total_power,
+    fig_sum_total_power_by_date = px.line(
+        logs_sum_total_power_by_date,
+        x = 'off_timestamp',
+        y = 'sum_power_utilisation',
+        title = 'Total power utilisation',
+        labels = {'off_timestamp':'date', 'sum_power_utilisation':'Wh'},
+    )
+
+    fig_sum_total_power_by_date.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+
+    chart_sum_total_power_by_date = fig_sum_total_power_by_date.to_html()
+
+
+    fig_sum_total_power_by_device = px.bar(
+        logs_sum_total_power_by_device,
         x = 'device__name',
         y = 'sum_power_utilisation',
         title = 'Power utilisation by device',
@@ -120,9 +139,9 @@ def shApp_stats(request):
         color='device__name',
     )
 
-    fig_sum_total_power.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+    fig_sum_total_power_by_device.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
 
-    chart_sum_total_power = fig_sum_total_power.to_html()
+    chart_sum_total_power_by_device = fig_sum_total_power_by_device.to_html()
 
     fig_count_on_off = px.bar(
         logs_count_on_off,
@@ -137,8 +156,11 @@ def shApp_stats(request):
 
     chart_count_on_off = fig_count_on_off.to_html()
 
-    return render(request, 'shApp_stats.html', {'chart_sum_total_power': chart_sum_total_power
-        , 'chart_count_on_off': chart_count_on_off,'form': FilterForm(current_user=request.user)})
+    return render(request, 'shApp_stats.html',
+                  {'chart_sum_total_power': chart_sum_total_power_by_device
+                      , 'chart_count_on_off': chart_count_on_off
+                      , 'chart_sum_total_power_by_date': chart_sum_total_power_by_date
+                      ,'form': FilterForm(current_user=request.user)})
 
 
 
