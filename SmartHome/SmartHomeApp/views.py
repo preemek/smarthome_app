@@ -1,15 +1,9 @@
-from dataclasses import field
 from datetime import datetime, timezone
-from lib2to3.fixes.fix_input import context
-
 from django.db.models import Sum, Subquery, F, Count
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template.defaultfilters import title
-
 from SmartHomeApp.models import Device, LogRow
 from SmartHomeApp.forms import DeviceForm, FilterForm
 from django.contrib.auth.decorators import login_required
-
 import plotly.express as px
 
 # Create your views here.
@@ -84,38 +78,10 @@ def shApp_logs(request):
 
     return render(request, 'shApp_logs.html', {"logs": logs})
 
-
-@login_required(login_url='login')
-def shApp_stats(request):
-    start_date = request.POST.get('start_date')
-    end_date = request.POST.get('end_date')
-    filter_devices = request.POST.get('device')
-    logs = LogRow.objects.filter(owner=request.user
-                                  ).annotate(total_power_utilisation
-                                                         = F('power_in_watts') * F('time_in_seconds') / 3600)
-    if start_date is not None:
-        logs = logs.filter(on_timestamp__gte=start_date)
-    if end_date is not None:
-        logs = logs.filter(on_timestamp__lte=end_date)
-    if filter_devices is not None:
-        logs = logs.filter(device=filter_devices)
-
-
-    print('filter_devices: ',filter_devices)
-
+def create_chart_sum_total_power_by_date(logs):
     logs_sum_total_power_by_date = (logs.values('off_timestamp__date')
-                                      .order_by('off_timestamp__date')
-                                      .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
-
-    print(logs_sum_total_power_by_date)
-
-    logs_sum_total_power_by_device = (logs.values('device__name')
-             .order_by('device__name')
-             .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
-
-    logs_count_on_off = (logs.values('device__name')
-                         .order_by('device__name')
-                         .annotate(count_on_off=Count('device__name')))
+                                    .order_by('off_timestamp__date')
+                                    .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
     fig_sum_total_power_by_date = px.line(
         logs_sum_total_power_by_date,
@@ -126,42 +92,78 @@ def shApp_stats(request):
         labels = {'off_timestamp__date':'date', 'sum_power_utilisation':'Wh'},
     )
 
-    fig_sum_total_power_by_date.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+    fig_sum_total_power_by_date.update_layout(title={'font_size': 20, 'xanchor': 'center', 'x': 0.5})
 
-    chart_sum_total_power_by_date = fig_sum_total_power_by_date.to_html()
+    return fig_sum_total_power_by_date.to_html()
 
+def create_chart_sum_total_power_by_device(logs):
+    logs_sum_total_power_by_device = (logs.values('device__name')
+                                      .order_by('device__name')
+                                      .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
     fig_sum_total_power_by_device = px.pie(
         logs_sum_total_power_by_device,
-        names = 'device__name',
-        values = 'sum_power_utilisation',
-        title = 'Power utilisation by device',
-        labels = {'device__name':'device', 'sum_power_utilisation':'Wh'},
+        names='device__name',
+        values='sum_power_utilisation',
+        title='Power utilisation by device',
+        labels={'device__name': 'device', 'sum_power_utilisation': 'Wh'},
         color='device__name',
     )
 
-    fig_sum_total_power_by_device.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+    fig_sum_total_power_by_device.update_layout(title={'font_size': 20, 'xanchor': 'center', 'x': 0.5})
 
-    chart_sum_total_power_by_device = fig_sum_total_power_by_device.to_html()
+    return fig_sum_total_power_by_device.to_html()
+
+def create_chart_count_on_off(logs):
+    logs_count_on_off = (logs.values('device__name')
+                         .order_by('device__name')
+                         .annotate(count_on_off=Count('device__name')))
 
     fig_count_on_off = px.bar(
         logs_count_on_off,
-        x = 'device__name',
-        y = 'count_on_off',
-        title = 'Number of times the device was switched on',
-        labels = {'device__name':'device', 'count_on_off':'number'},
+        x='device__name',
+        y='count_on_off',
+        title='Number of times the device was switched on',
+        labels={'device__name': 'device', 'count_on_off': 'number'},
         color='device__name',
     )
 
-    fig_count_on_off.update_layout(title = {'font_size': 20,'xanchor': 'center', 'x': 0.5})
+    fig_count_on_off.update_layout(title={'font_size': 20, 'xanchor': 'center', 'x': 0.5})
 
-    chart_count_on_off = fig_count_on_off.to_html()
+    return fig_count_on_off.to_html()
+
+
+@login_required(login_url='login')
+def shApp_stats(request):
+    start_date = request.POST.get('start_date')
+    end_date = request.POST.get('end_date')
+    filter_devices = request.POST.get('device')
+
+    logs = LogRow.objects.filter(owner=request.user
+                                  ).annotate(total_power_utilisation
+                                                         = F('power_in_watts') * F('time_in_seconds') / 3600)
+    if start_date:
+        logs = logs.filter(on_timestamp__gte=start_date)
+    else:
+        start_date = None
+    if end_date:
+        logs = logs.filter(on_timestamp__lte=end_date)
+    else:
+        end_date = datetime.now()
+    if filter_devices:
+        logs = logs.filter(device=filter_devices)
+
+    filter_form = FilterForm(current_user=request.user, end_date = end_date, start_date = start_date, device = filter_devices)
+
+    chart_sum_total_power_by_date = create_chart_sum_total_power_by_date(logs)
+    chart_sum_total_power_by_device = create_chart_sum_total_power_by_device(logs)
+    chart_count_on_off = create_chart_count_on_off(logs)
 
     return render(request, 'shApp_stats.html',
                   {'chart_sum_total_power': chart_sum_total_power_by_device
                       , 'chart_count_on_off': chart_count_on_off
                       , 'chart_sum_total_power_by_date': chart_sum_total_power_by_date
-                      ,'form': FilterForm(current_user=request.user)})
+                      ,'form': filter_form})
 
 
 
