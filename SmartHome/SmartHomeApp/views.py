@@ -155,9 +155,14 @@ def shApp_stats(request):
 
     filter_form = FilterForm(current_user=request.user, end_date = end_date, start_date = start_date, device = filter_devices)
 
-    chart_sum_total_power_by_date = create_chart_sum_total_power_by_date(logs)
-    chart_sum_total_power_by_device = create_chart_sum_total_power_by_device(logs)
-    chart_count_on_off = create_chart_count_on_off(logs)
+    if logs:
+        chart_sum_total_power_by_date = create_chart_sum_total_power_by_date(logs)
+        chart_sum_total_power_by_device = create_chart_sum_total_power_by_device(logs)
+        chart_count_on_off = create_chart_count_on_off(logs)
+    else:
+        chart_sum_total_power_by_date = "Total power utilisation: No data to present, change filtering."
+        chart_sum_total_power_by_device = "Power utilisation by device: No data to present, change filtering."
+        chart_count_on_off = "Number of times the device was switched on: No data to present, change filtering."
 
     return render(request, 'shApp_stats.html',
                   {'chart_sum_total_power': chart_sum_total_power_by_device
