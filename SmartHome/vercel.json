@@ -10,5 +10,6 @@
             "dest": "SmartHome/wsgi.py"
         }
     ],
-    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+    "framework": "nextjs"
 }
