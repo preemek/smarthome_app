@@ -1,6 +1,8 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from django.db.models import Sum, Subquery, F, Count
 from django.shortcuts import render, redirect, get_object_or_404
+from numpy.ma.core import append
+
 from SmartHomeApp.models import Device, LogRow
 from SmartHomeApp.forms import DeviceForm, FilterForm
 from django.contrib.auth.decorators import login_required
@@ -83,10 +85,25 @@ def create_chart_sum_total_power_by_date(logs):
                                     .order_by('off_timestamp__date')
                                     .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
-    # to do add days when utilisation was 0
+    start_date = logs_sum_total_power_by_date[0].get('off_timestamp__date')
+    end_date = logs_sum_total_power_by_date.latest('off_timestamp__date').get('off_timestamp__date')
+
+    i = 0
+    missing_dates = []
+    while start_date < end_date:
+        if logs_sum_total_power_by_date[i].get('off_timestamp__date') != start_date:
+            missing_dates.append({'sum_power_utilisation': 0, 'off_timestamp__date': start_date})
+        else:
+            i += 1
+        start_date = start_date + timedelta(days=1)
+
+    log = list(logs_sum_total_power_by_date) + missing_dates
+    def sort_f(e):
+        return e['off_timestamp__date']
+    log = log.sort(key=sort_f)
 
     fig_sum_total_power_by_date = px.line(
-        logs_sum_total_power_by_date,
+        log,
         x = 'off_timestamp__date',
         y = 'sum_power_utilisation',
         markers = True,
@@ -145,7 +162,7 @@ def shApp_stats(request):
                                   ).annotate(total_power_utilisation
                                                          = F('power_in_watts') * F('time_in_seconds') / 3600)
     if start_date:
-        logs = logs.filter(on_timestamp__gte=start_date)
+        logs = logs.filter(on_timestamp__gte=start_date, off_timestamp__isnull = False )
     else:
         start_date = None
     if end_date:
