@@ -83,6 +83,8 @@ def create_chart_sum_total_power_by_date(logs):
                                     .order_by('off_timestamp__date')
                                     .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
 
+    # to do add days when utilisation was 0
+
     fig_sum_total_power_by_date = px.line(
         logs_sum_total_power_by_date,
         x = 'off_timestamp__date',
