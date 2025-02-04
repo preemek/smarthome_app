@@ -1,3 +1,4 @@
+import operator
 from datetime import datetime, timezone, timedelta
 from django.db.models import Sum, Subquery, F, Count
 from django.shortcuts import render, redirect, get_object_or_404
@@ -89,18 +90,13 @@ def create_chart_sum_total_power_by_date(logs):
     end_date = logs_sum_total_power_by_date.latest('off_timestamp__date').get('off_timestamp__date')
 
     i = 0
-    missing_dates = []
+    log = list(logs_sum_total_power_by_date)
     while start_date < end_date:
-        if logs_sum_total_power_by_date[i].get('off_timestamp__date') != start_date:
-            missing_dates.append({'sum_power_utilisation': 0, 'off_timestamp__date': start_date})
+        if log[i].get('off_timestamp__date') != start_date:
+            log.insert(i,{'sum_power_utilisation': 0, 'off_timestamp__date': start_date})
         else:
             i += 1
         start_date = start_date + timedelta(days=1)
-
-    log = list(logs_sum_total_power_by_date) + missing_dates
-    def sort_f(e):
-        return e['off_timestamp__date']
-    log = log.sort(key=sort_f)
 
     fig_sum_total_power_by_date = px.line(
         log,
