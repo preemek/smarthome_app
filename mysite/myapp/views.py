@@ -5,6 +5,9 @@ from .forms import DeviceForm
 from django.http import JsonResponse
 import json
 from .mqtt_client import client
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+
 
 # Create your views here.
 
@@ -12,8 +15,16 @@ def devices_list(request):
     devices = Device.objects.all()  
     return render(request, 'devices_list.html', {'devices_list': devices})
 
-def home(request):
-    return render(request, 'home.html')
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  
+            return redirect('/')  
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
 def add_device(request):
     if request.method == 'POST':

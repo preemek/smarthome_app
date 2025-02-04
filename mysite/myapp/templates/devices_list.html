@@ -105,8 +105,12 @@
         <h1 class="mb-4">Devices List</h1>
         <div class="d-flex justify-content-between mb-3">
             <h3>Device Manager</h3>
-            <a href="{% url 'add_device' %}" class="btn btn-primary">Add New Device</a>
+            <div>
+                <a href="{% url 'add_device' %}" class="btn btn-primary">Add New Device</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            </div>
         </div>
+        
         <div class="info-box">
             <strong>Tip:</strong> Click "Turn On" or "Turn Off" to control device status. You can also delete a device from the list.
         </div>
