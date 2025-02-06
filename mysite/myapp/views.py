@@ -3,16 +3,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Device
 from .forms import DeviceForm
 from django.http import JsonResponse
-import json
 from .mqtt_client import client
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from .models import Eventlog
 
 
 # Create your views here.
-
+@login_required
 def devices_list(request):
-    devices = Device.objects.all()  
+    devices = Device.objects.filter(user=request.user)  
     return render(request, 'devices_list.html', {'devices_list': devices})
 
 def register(request):
@@ -26,11 +27,14 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
+@login_required
 def add_device(request):
     if request.method == 'POST':
         form = DeviceForm(request.POST)
         if form.is_valid():
-            form.save() 
+            device = form.save(commit=False)
+            device.user = request.user
+            device.save() 
             return redirect('devices_list')  
     else:
         form = DeviceForm()  
@@ -57,4 +61,18 @@ def toggle_device_status(request, device_id):
 
     return JsonResponse({"success": True, "new_status": new_status})
  
+
+
+def toggle_device_status(request, device_id):
+    if request.method == "POST":
+        device = get_object_or_404(Device, id=device_id)
+        device.status = not device.status
+        device.save()
+        return JsonResponse({'success': True, 'new_status' : device.status})
+    return JsonResponse({'success': False}, status=400)
+
+@login_required
+def event_log(request):
+    logs = Eventlog.objects.order_by('-timestamp')[:50]  
+    return render(request, 'event_log.html', {'logs': logs})
 
