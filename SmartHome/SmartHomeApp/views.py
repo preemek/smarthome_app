@@ -1,5 +1,7 @@
 import operator
 from datetime import datetime, timezone, timedelta
+
+from dateutil.utils import today
 from django.db.models import Sum, Subquery, F, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from numpy.ma.core import append
@@ -17,7 +19,7 @@ def shApp(request):
 
 @login_required(login_url='login')
 def shApp_devices(request):
-    devices = Device.objects.for_user(request.user)
+    devices = Device.objects.for_user(request.user).order_by('name')
     return render(request, 'shApp_devices.html', {"devices": devices})
 
 @login_required(login_url='login')
@@ -88,16 +90,28 @@ def create_chart_sum_total_power_by_date(logs):
 
     start_date = logs_sum_total_power_by_date[0].get('off_timestamp__date')
     end_date = logs_sum_total_power_by_date.latest('off_timestamp__date').get('off_timestamp__date')
+    if not end_date:
+        end_date = datetime.now().date()
 
     i = 0
     log = list(logs_sum_total_power_by_date)
+    log = filter(lambda l: l.get('off_timestamp__date'), log)
+    log = list(log)
+    print('log: ',log)
     while start_date < end_date:
         if log[i].get('off_timestamp__date') != start_date:
             log.insert(i,{'sum_power_utilisation': 0, 'off_timestamp__date': start_date})
+            i += 1
         else:
             i += 1
         start_date = start_date + timedelta(days=1)
 
+    def sort_fun(l):
+        return int(l.get('off_timestamp__date').strftime('%Y%m%d'))
+
+    log.sort(key=sort_fun)
+
+    print('log2: ', log)
     fig_sum_total_power_by_date = px.line(
         log,
         x = 'off_timestamp__date',
@@ -110,6 +124,24 @@ def create_chart_sum_total_power_by_date(logs):
     fig_sum_total_power_by_date.update_layout(title={'font_size': 20, 'xanchor': 'center', 'x': 0.5})
 
     return fig_sum_total_power_by_date.to_html()
+
+def create_chart_sum_total_power_by_room(logs):
+    logs_sum_total_power_by_room = (logs.values('device__description')
+                                      .order_by('device__description')
+                                      .annotate(sum_power_utilisation=Sum('total_power_utilisation')))
+
+    fig_sum_total_power_by_room = px.pie(
+        logs_sum_total_power_by_room,
+        names='device__description',
+        values='sum_power_utilisation',
+        title='Power utilisation by room',
+        labels={'device__description': 'room', 'sum_power_utilisation': 'Wh'},
+        color='device__description',
+    )
+
+    fig_sum_total_power_by_room.update_layout(title={'font_size': 20, 'xanchor': 'center', 'x': 0.5})
+
+    return fig_sum_total_power_by_room.to_html()
 
 def create_chart_sum_total_power_by_device(logs):
     logs_sum_total_power_by_device = (logs.values('device__name')
@@ -158,11 +190,11 @@ def shApp_stats(request):
                                   ).annotate(total_power_utilisation
                                                          = F('power_in_watts') * F('time_in_seconds') / 3600)
     if start_date:
-        logs = logs.filter(on_timestamp__gte=start_date, off_timestamp__isnull = False )
+        logs = logs.filter(on_timestamp__date__gte=start_date, off_timestamp__isnull = False )
     else:
         start_date = None
     if end_date:
-        logs = logs.filter(on_timestamp__lte=end_date)
+        logs = logs.filter(off_timestamp__date__lte=end_date)
     else:
         end_date = datetime.now()
     if filter_devices:
@@ -172,10 +204,12 @@ def shApp_stats(request):
 
     if logs:
         chart_sum_total_power_by_date = create_chart_sum_total_power_by_date(logs)
+        chart_sum_total_power_by_room = create_chart_sum_total_power_by_room(logs)
         chart_sum_total_power_by_device = create_chart_sum_total_power_by_device(logs)
         chart_count_on_off = create_chart_count_on_off(logs)
     else:
         chart_sum_total_power_by_date = "Total power utilisation: No data to present, change filtering."
+        chart_sum_total_power_by_room = "Power utilisation by room: No data to present, change filtering."
         chart_sum_total_power_by_device = "Power utilisation by device: No data to present, change filtering."
         chart_count_on_off = "Number of times the device was switched on: No data to present, change filtering."
 
@@ -183,6 +217,7 @@ def shApp_stats(request):
                   {'chart_sum_total_power': chart_sum_total_power_by_device
                       , 'chart_count_on_off': chart_count_on_off
                       , 'chart_sum_total_power_by_date': chart_sum_total_power_by_date
+                      ,'chart_sum_total_power_by_room': chart_sum_total_power_by_room
                       ,'form': filter_form})
 
 
