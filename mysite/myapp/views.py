@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .models import Eventlog
+from django.utils.timezone import now
 
 
 # Create your views here.
@@ -62,17 +63,25 @@ def toggle_device_status(request, device_id):
     return JsonResponse({"success": True, "new_status": new_status})
  
 
-
 def toggle_device_status(request, device_id):
     if request.method == "POST":
         device = get_object_or_404(Device, id=device_id)
         device.status = not device.status
         device.save()
-        return JsonResponse({'success': True, 'new_status' : device.status})
+
+        Eventlog.objects.create(
+            user=request.user,
+            device=device,
+            action=f"Changed status to {'ON' if device.status else 'OFF'}",
+            timestamp=now()
+        )
+
+        return JsonResponse({'success': True, 'new_status': device.status})
     return JsonResponse({'success': False}, status=400)
 
 @login_required
 def event_log(request):
     logs = Eventlog.objects.order_by('-timestamp')[:50]  
+    print(logs)  
     return render(request, 'event_log.html', {'logs': logs})
 
